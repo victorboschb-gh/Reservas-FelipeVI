@@ -183,6 +183,8 @@ Consulta el archivo [LICENSE](./LICENSE) para más detalles o visita [creativeco
 
 Desarrollado para el **CIFP Felipe VI** — Segovia, España.
 
+Este proyecto forma parte del **Proyecto Aula-Empresa+ Castilla y León 2025/2026**. Consulta el detalle de autoría y créditos en [CREDITS.md](./CREDITS.md).
+
 <p>
   <img src="public/Logo_CIFP.png" alt="CIFP Felipe VI" width="80" />
   &nbsp;
