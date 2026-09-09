@@ -2,7 +2,7 @@ import { sql, MenuDay, expireOldReservations } from '@/lib/db';
 import { format, startOfDay } from 'date-fns';
 import { es } from 'date-fns/locale';
 import Link from 'next/link';
-import { Calendar as CalendarIcon, Users, CheckCircle, HelpCircle, ClipboardList, Mail, Clock } from 'lucide-react';
+import { Calendar as CalendarIcon, Users, CheckCircle, HelpCircle, ClipboardList, Mail, Clock, Download } from 'lucide-react';
 import { ALLERGENS } from '@/lib/constants';
 
 export const dynamic = 'force-dynamic';
@@ -83,7 +83,11 @@ export default async function UserLandingPage() {
             </div>
             <div className="flex-1">
               <h2 className="text-xl font-bold text-gray-900">¿Cómo funciona?</h2>
-              <p className="text-sm text-gray-500">Guía rápida para reservar tu ración</p>
+              <p className="text-sm text-gray-500">Guía rápida para reservar tu comida</p>
+              <a href="/Guia_Practica_Automatizaciones_CIFP_v2 (1).pdf" download className="inline-flex items-center gap-2 mt-2 px-4 py-2 bg-sky-600 text-white text-sm font-medium rounded-lg hover:bg-sky-700 transition-colors">
+                <Download className="w-4 h-4" />
+                Descargar guía de la automatización
+              </a>
             </div>
             <svg className="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
           </summary>
