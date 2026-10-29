@@ -67,6 +67,10 @@ export default async function ReservationFormPage({ params, searchParams }: { pa
     const portions = parseInt(formData.get('portions') as string);
     const dayId = formData.get('menu_day_id') as string;
 
+    if (!Number.isInteger(portions) || portions < 1) {
+      redirect(`/reservar/${dayId}?error=Número+de+comensales+no+válido`);
+    }
+
     const currentData = await getDayAndAvailability(dayId);
     if (!currentData || currentData.availablePortions < portions) {
       redirect(`/reservar/${dayId}?error=No+hay+suficientes+comensales+disponibles`);
@@ -191,11 +195,11 @@ export default async function ReservationFormPage({ params, searchParams }: { pa
                   required
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none bg-white appearance-none cursor-pointer transition-all text-gray-900"
                 >
-                  {Array.from({ length: Math.min(10, availablePortions) }).map((_, i) => (
+                  {Array.from({ length: availablePortions }).map((_, i) => (
                     <option key={i + 1} value={i + 1}>{i + 1}</option>
                   ))}
                 </select>
-                <p className="mt-2 text-sm text-gray-500">Máximo 10 comensales por reserva.</p>
+                <p className="mt-2 text-sm text-gray-500">Puedes reservar hasta {availablePortions} comensales en este servicio.</p>
               </div>
 
               <AllergyNotice />
