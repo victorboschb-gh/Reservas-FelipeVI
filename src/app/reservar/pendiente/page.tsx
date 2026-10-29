@@ -73,13 +73,13 @@ export default async function PendingApprovalPage({
               </div>
 
               <div>
-                <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Día de la comida</p>
+                <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Día del servicio</p>
                 <p className="font-bold text-gray-800 capitalize">{dateString}</p>
               </div>
 
               <div className="flex justify-between items-end border-t border-gray-100 pt-5">
                 <div>
-                  <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Comidas</p>
+                  <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Comensales</p>
                   <p className="font-black text-2xl text-gray-900">{reservation.portions}</p>
                 </div>
                 <div className="text-right">

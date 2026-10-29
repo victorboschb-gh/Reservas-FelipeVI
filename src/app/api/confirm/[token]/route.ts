@@ -73,7 +73,7 @@ export async function GET(
           reservation.email,
           reservation.name,
           dateString,
-          'No quedan comidas disponibles para ese día.'
+          'No quedan plazas disponibles para ese servicio.'
         );
       } catch (emailError) {
         console.error("Error sending rejection email:", emailError);

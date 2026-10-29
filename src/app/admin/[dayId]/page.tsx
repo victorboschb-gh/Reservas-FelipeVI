@@ -6,6 +6,7 @@ import { ArrowLeft, Users, Check, X, Pencil, Mail, Clock, ShieldCheck, XCircle, 
 import ExportButton from '@/app/components/ExportButton';
 import { redirect } from 'next/navigation';
 import DayReservationActions from '@/app/components/DayReservationActions';
+import { getCurrentAdmin } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
 
@@ -89,6 +90,7 @@ export default async function AdminDayView({
 
   async function updateMenuDescription(formData: FormData) {
     'use server';
+    if (!(await getCurrentAdmin())) redirect('/admin/login');
     const id = formData.get('id') as string;
     const description = formData.get('description') as string;
     const max_portions = parseInt(formData.get('max_portions') as string);
@@ -108,6 +110,7 @@ export default async function AdminDayView({
 
   async function updateReservation(formData: FormData) {
     'use server';
+    if (!(await getCurrentAdmin())) redirect('/admin/login');
     const id = formData.get('id') as string;
     const name = formData.get('name') as string;
     const email = formData.get('email') as string;
@@ -145,7 +148,7 @@ export default async function AdminDayView({
             <div className="flex items-center gap-3">
               <h1 className="text-3xl font-bold text-gray-900 capitalize">{dateString}</h1>
               {!editMenu && (
-                <Link href={`/admin/${day.id}?editMenu=true`} className="text-amber-500 hover:text-amber-700 bg-amber-50 p-1.5 rounded-md transition-colors" title="Editar Comida">
+                <Link href={`/admin/${day.id}?editMenu=true`} className="text-amber-500 hover:text-amber-700 bg-amber-50 p-1.5 rounded-md transition-colors" title="Editar servicio">
                   <Pencil className="w-4 h-4" />
                 </Link>
               )}
@@ -154,11 +157,11 @@ export default async function AdminDayView({
               <form action={updateMenuDescription} className="mt-3 space-y-3 bg-amber-50 p-4 rounded-xl border border-amber-200">
                 <input type="hidden" name="id" value={day.id} />
                 <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Descripción de la comida</label>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Descripción del servicio</label>
                   <textarea name="description" rows={3} defaultValue={day.description} required className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-sky-500 focus:border-sky-500 text-gray-900" />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Comidas disponibles</label>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Comensales disponibles</label>
                   <input type="number" name="max_portions" defaultValue={day.max_portions} min="1" required className="w-32 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-sky-500 focus:border-sky-500 text-gray-900" />
                 </div>
                 <div className="flex gap-2">
@@ -224,9 +227,8 @@ export default async function AdminDayView({
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cód.</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contacto</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rac.</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Com.</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Alérgenos / Notas</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hora</th>
                   <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
                 </tr>
@@ -239,7 +241,7 @@ export default async function AdminDayView({
                     return (
                       <tr key={res.id} className="bg-amber-50/50">
                         <td className="px-6 py-3 text-sm font-bold text-gray-700">{res.id.substring(0,4).toUpperCase()}</td>
-                        <td colSpan={6} className="py-3 px-2">
+                        <td colSpan={5} className="py-3 px-2">
                           <form action={updateReservation} className="flex flex-col sm:flex-row items-center gap-2" id={`edit-form-${res.id}`}>
                             <input type="hidden" name="id" value={res.id} />
                             <input type="hidden" name="dayId" value={day.id} />
@@ -282,16 +284,6 @@ export default async function AdminDayView({
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <StatusBadge status={res.status} />
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-500 max-w-xs truncate" title={res.allergens?.join(', ')}>
-                        {res.allergens && res.allergens.length > 0 ? (
-                           <div className="flex flex-wrap gap-1">
-                             {res.allergens.map((a: string) => <span key={a} className="bg-orange-100 text-orange-800 text-xs px-2 py-0.5 rounded-full">{a}</span>)}
-                           </div>
-                        ) : (
-                          <span className="text-gray-400 italic">Ninguno</span>
-                        )}
-                        {res.allergens_notes && <div className="mt-1 text-xs text-gray-500 truncate">{res.allergens_notes}</div>}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {new Date(res.created_at).toLocaleString('es-ES', { 

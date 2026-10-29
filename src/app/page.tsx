@@ -3,7 +3,7 @@ import { format, startOfDay } from 'date-fns';
 import { es } from 'date-fns/locale';
 import Link from 'next/link';
 import { Calendar as CalendarIcon, Users, CheckCircle, HelpCircle, ClipboardList, Mail, Clock, Download } from 'lucide-react';
-import { ALLERGENS } from '@/lib/constants';
+import AllergyNotice from '@/app/components/AllergyNotice';
 
 export const dynamic = 'force-dynamic';
 
@@ -70,7 +70,7 @@ export default async function UserLandingPage() {
             <img src="/Logo_CIFP.png" alt="Logo CIFP Felipe VI" className="h-20 md:h-24 w-auto object-contain" />
           </div>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 tracking-tight drop-shadow-md">Comedor CIFP Felipe VI</h1>
-          <p className="text-xl md:text-2xl text-sky-50 max-w-2xl mx-auto font-medium drop-shadow-sm">Reserva tus comidas.</p>
+          <p className="text-xl md:text-2xl text-sky-50 max-w-2xl mx-auto font-medium drop-shadow-sm">Reserva tu mesa.</p>
         </div>
       </header>
 
@@ -83,7 +83,7 @@ export default async function UserLandingPage() {
             </div>
             <div className="flex-1">
               <h2 className="text-xl font-bold text-gray-900">¿Cómo funciona?</h2>
-              <p className="text-sm text-gray-500">Guía rápida para reservar tu comida</p>
+              <p className="text-sm text-gray-500">Guía rápida para reservar tu mesa</p>
               <a href="/Guia_Practica_Automatizaciones_CIFP_v2 (1).pdf" download className="inline-flex items-center gap-2 mt-2 px-4 py-2 bg-sky-600 text-white text-sm font-medium rounded-lg hover:bg-sky-700 transition-colors">
                 <Download className="w-4 h-4" />
                 Descargar guía de la automatización
@@ -96,16 +96,16 @@ export default async function UserLandingPage() {
               <div className="bg-sky-50 rounded-xl p-5 border border-sky-100">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="bg-sky-500 text-white w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold">1</span>
-                  <h3 className="font-bold text-gray-900">Elige tu comida</h3>
+                  <h3 className="font-bold text-gray-900">Reserva tu mesa</h3>
                 </div>
-                <p className="text-sm text-gray-600">Revisa las comidas disponibles. Cada día muestra el plato, los alérgenos y las comidas que quedan.</p>
+                <p className="text-sm text-gray-600">Revisa los servicios disponibles, elige el día y reserva tu mesa.</p>
               </div>
               <div className="bg-sky-50 rounded-xl p-5 border border-sky-100">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="bg-sky-500 text-white w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold">2</span>
                   <h3 className="font-bold text-gray-900">Rellena tus datos</h3>
                 </div>
-                <p className="text-sm text-gray-600">Nombre, email, teléfono y número de comidas. Puedes indicar alergias o intolerancias.</p>
+                <p className="text-sm text-gray-600">Nombre, email, teléfono y número de comensales.</p>
               </div>
               <div className="bg-amber-50 rounded-xl p-5 border border-amber-100">
                 <div className="flex items-center gap-2 mb-3">
@@ -117,9 +117,9 @@ export default async function UserLandingPage() {
               <div className="bg-green-50 rounded-xl p-5 border border-green-100">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="bg-green-500 text-white w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold">4</span>
-                  <h3 className="font-bold text-gray-900">Recoge tu comida</h3>
+                  <h3 className="font-bold text-gray-900">Ven y disfruta de la experiencia</h3>
                 </div>
-                <p className="text-sm text-gray-600">El día de la comida, presenta tu código de recogida (aparece al confirmar). ¡Y listo!</p>
+                <p className="text-sm text-gray-600">El día del servicio presenta tu código y listo.</p>
               </div>
             </div>
             <div className="mt-4 flex flex-wrap gap-4 text-sm text-gray-500">
@@ -131,12 +131,14 @@ export default async function UserLandingPage() {
         </details>
         <div className="flex items-center gap-3 mb-8">
           <CalendarIcon className="w-8 h-8 text-sky-500" />
-          <h2 className="text-3xl font-bold text-gray-800">Comidas</h2>
+          <h2 className="text-3xl font-bold text-gray-800">Servicios</h2>
         </div>
+
+        <AllergyNotice className="mb-8" />
 
         {availableDays.length === 0 ? (
           <div className="bg-white rounded-2xl p-12 text-center shadow-sm border border-gray-100">
-            <p className="text-xl text-gray-600">Actualmente no hay comidas planificadas para los próximos días.</p>
+            <p className="text-xl text-gray-600">Actualmente no hay servicios programados para los próximos días.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -156,25 +158,11 @@ export default async function UserLandingPage() {
                       {day.description}
                     </p>
                     
-                    {day.allergens && day.allergens.length > 0 && (
-                      <div className="mb-6 flex flex-wrap gap-1.5 align-baseline">
-                        {day.allergens.map(aId => {
-                          const a = ALLERGENS.find(al => al.id === aId);
-                          if (!a) return null;
-                          return (
-                            <span key={a.id} className={`text-[11px] px-2 py-1 rounded-md border ${a.color} font-bold uppercase tracking-wider shadow-sm`}>
-                              {a.label}
-                            </span>
-                          );
-                        })}
-                      </div>
-                    )}
-                    
                     <div className="mt-auto">
                       <div className="flex items-center gap-2 mb-6 text-sm font-medium">
                         <Users className="w-5 h-5 text-gray-400" />
                         {isAvailable ? (
-                          <span className="text-sky-600 px-3 py-1.5 bg-sky-50 rounded-full font-semibold border border-sky-100">{day.availablePortions} comidas disponibles</span>
+                          <span className="text-sky-600 px-3 py-1.5 bg-sky-50 rounded-full font-semibold border border-sky-100">{day.availablePortions} comensales disponibles</span>
                         ) : (
                           <span className="text-red-500 px-3 py-1.5 bg-red-50 rounded-full font-semibold border border-red-100">Agotado</span>
                         )}
@@ -186,7 +174,7 @@ export default async function UserLandingPage() {
                           className="w-full flex justify-center items-center gap-2 bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white py-3.5 rounded-2xl shadow-md hover:shadow-lg transition-all font-semibold text-lg"
                         >
                           <CheckCircle className="w-5 h-5" />
-                          Reservar Comida
+                          Reservar mesa
                         </Link>
                       ) : (
                         <button disabled className="w-full bg-gray-100 text-gray-400 py-3.5 rounded-2xl font-semibold cursor-not-allowed">

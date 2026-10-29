@@ -19,9 +19,7 @@ export default function ExportButton({
       'Nombre': res.name,
       'Email': res.email,
       'Teléfono': res.phone || '',
-      'Comidas': res.portions,
-      'Alérgenos': res.allergens?.join(', ') || 'Ninguno',
-      'Notas Alérgenos': res.allergens_notes || '',
+      'Comensales': res.portions,
       'Fecha de Reserva': new Date(res.created_at).toLocaleString('es-ES')
     }));
 
@@ -36,9 +34,7 @@ export default function ExportButton({
       { wch: 30 }, // Nombre
       { wch: 35 }, // Email
       { wch: 15 }, // Teléfono
-      { wch: 10 }, // Comidas
-      { wch: 30 }, // Alérgenos
-      { wch: 40 }, // Notas Alérgenos
+      { wch: 10 }, // Comensales
       { wch: 25 }, // Fecha de Reserva
     ];
     worksheet['!cols'] = wscols;

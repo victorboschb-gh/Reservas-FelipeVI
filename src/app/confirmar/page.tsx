@@ -21,7 +21,7 @@ export default async function ConfirmarPage({
           </div>
           <h1 className="text-3xl font-extrabold text-gray-900 mb-2">Reserva Confirmada</h1>
           {name && <p className="text-lg text-gray-600 mb-4">Hola <strong>{name}</strong>, tu reserva ha sido confirmada con éxito.</p>}
-          <p className="text-gray-500 mb-8">Presenta tu código de recogida el día de la comida.</p>
+          <p className="text-gray-500 mb-8">Presenta tu código de recogida el día del servicio.</p>
           <Link href="/" className="inline-flex items-center gap-2 bg-sky-500 hover:bg-sky-600 text-white px-6 py-3 rounded-xl font-medium transition-colors">
             Volver al Inicio
           </Link>
@@ -47,7 +47,7 @@ export default async function ConfirmarPage({
             <XCircle className="w-8 h-8" />
           </div>
           <h1 className="text-3xl font-extrabold text-gray-900 mb-2">Sin plazas disponibles</h1>
-          <p className="text-lg text-gray-600 mb-4">Lo sentimos, pero al confirmar tu reserva ya no quedaban comidas disponibles para ese día.</p>
+          <p className="text-lg text-gray-600 mb-4">Lo sentimos, pero al confirmar tu reserva ya no quedaban plazas disponibles para ese servicio.</p>
           <p className="text-gray-500 mb-8">Te hemos enviado un email con los detalles.</p>
           <Link href="/" className="inline-flex items-center gap-2 bg-sky-500 hover:bg-sky-600 text-white px-6 py-3 rounded-xl font-medium transition-colors">
             Ver otros días

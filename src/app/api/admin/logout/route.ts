@@ -1,16 +1,14 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
+import { SESSION_COOKIE, deleteSession, sessionCookieOptions } from '@/lib/auth';
 
-export async function POST() {
+export async function POST(request: NextRequest) {
+  try {
+    await deleteSession(request.cookies.get(SESSION_COOKIE)?.value);
+  } catch (error) {
+    console.error('Error cerrando sesión:', error);
+  }
+
   const response = NextResponse.json({ success: true });
-  
-  // Clear the token cookie
-  response.cookies.set('admin_token', '', {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    maxAge: 0,
-    path: '/',
-  });
-  
+  response.cookies.set(SESSION_COOKIE, '', sessionCookieOptions(0));
   return response;
 }

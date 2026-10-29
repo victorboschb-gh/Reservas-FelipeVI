@@ -21,7 +21,7 @@ export default async function ReservationSuccessPage({
       <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
         <CheckCircle className="w-16 h-16 text-green-500 mb-4" />
         <h1 className="text-3xl font-bold text-gray-800 mb-2">Reserva Recibida</h1>
-        <p className="text-gray-600 mb-8">Tu ración ha sido registrada.</p>
+        <p className="text-gray-600 mb-8">Tu reserva ha sido registrada.</p>
         <Link href="/" className="bg-sky-500 hover:bg-sky-600 text-white px-6 py-3 rounded-xl font-medium transition-colors">
           Volver al Inicio
         </Link>
@@ -141,7 +141,7 @@ export default async function ReservationSuccessPage({
 
             <div className="flex justify-between items-end border-t border-gray-100 pt-6">
               <div>
-                <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Comidas</p>
+                <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Comensales</p>
                 <div className="flex items-center gap-2">
                   <ChefHat className="w-5 h-5 text-sky-500" />
                   <p className="font-black text-2xl text-gray-900">{reservation.portions}</p>
@@ -153,13 +153,6 @@ export default async function ReservationSuccessPage({
               </div>
             </div>
             
-            {(reservation.allergens && reservation.allergens.length > 0) && (
-              <div className="bg-orange-50 p-3 rounded-xl border border-orange-100 mt-4">
-                <p className="text-xs text-orange-800 font-semibold uppercase tracking-wider mb-1">Aviso Cocina</p>
-                <p className="text-sm text-orange-700 font-medium">Contiene indicaciones de alérgenos.</p>
-              </div>
-            )}
-
             {!isConfirmed && (
               <div className="bg-gray-50 p-3 rounded-xl border border-gray-200 mt-4">
                 <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider mb-1">Estado</p>

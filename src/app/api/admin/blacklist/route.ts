@@ -1,7 +1,11 @@
+import { getCurrentAdmin } from '@/lib/auth';
 import { NextResponse } from 'next/server';
 import { sql, BlacklistedEmail } from '@/lib/db';
 
 export async function GET() {
+  if (!(await getCurrentAdmin())) {
+    return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
+  }
   try {
     const rows = await sql`SELECT * FROM blacklisted_emails ORDER BY email ASC` as BlacklistedEmail[];
     return NextResponse.json(rows);
@@ -12,6 +16,9 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  if (!(await getCurrentAdmin())) {
+    return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
+  }
   try {
     const { email } = await request.json();
     if (!email || typeof email !== 'string') {
@@ -41,6 +48,9 @@ export async function POST(request: Request) {
 }
 
 export async function DELETE(request: Request) {
+  if (!(await getCurrentAdmin())) {
+    return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
+  }
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');

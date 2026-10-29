@@ -40,7 +40,7 @@ export async function sendConfirmationEmail(
         </div>
         <div style="background: white; padding: 30px; border: 1px solid #e5e7eb; border-top: none;">
           <p style="font-size: 16px; color: #374151;">Hola <strong>${name}</strong>,</p>
-          <p style="font-size: 16px; color: #374151;">Has reservado <strong>${portions} comida${portions > 1 ? 's' : ''}</strong> para el <strong>${dateString}</strong>.</p>
+          <p style="font-size: 16px; color: #374151;">Has reservado mesa para <strong>${portions} comensal${portions > 1 ? 'es' : ''}</strong> el <strong>${dateString}</strong>.</p>
           <p style="font-size: 16px; color: #374151;">Para confirmar tu reserva, haz clic en el siguiente botón:</p>
           <div style="text-align: center; margin: 30px 0;">
             <a href="${confirmUrl}" style="background: linear-gradient(135deg, #0ea5e9, #2563eb); color: white; padding: 14px 32px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 16px; display: inline-block;">
@@ -49,6 +49,7 @@ export async function sendConfirmationEmail(
           </div>
           <p style="font-size: 14px; color: #9ca3af;">Si el botón no funciona, copia y pega este enlace en tu navegador:<br/>
           <a href="${confirmUrl}" style="color: #0ea5e9; word-break: break-all;">${confirmUrl}</a></p>
+          <p style="font-size: 14px; color: #92400e; background: #fffbeb; border: 1px solid #f59e0b; border-radius: 8px; padding: 12px; margin-top: 20px;">⚠️ <strong>Aviso sobre alergias e intolerancias:</strong> No podemos garantizar la ausencia de contaminación cruzada. Si tienes alguna alergia o intolerancia alimentaria, consúltalo con el personal antes de reservar.</p>
           <p style="font-size: 14px; color: #ef4444; margin-top: 20px;">⚠️ Este enlace expira en 24 horas. Si no confirmas, la reserva se cancelará automáticamente.</p>
         </div>
         <div style="background: #f9fafb; padding: 20px; border-radius: 0 0 16px 16px; text-align: center; border: 1px solid #e5e7eb; border-top: none;">

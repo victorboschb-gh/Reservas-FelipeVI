@@ -109,7 +109,7 @@ export default function PendingApprovals({ reservations }: { reservations: Pendi
                 <div className="flex flex-col sm:flex-row gap-x-4 gap-y-0.5 text-sm text-gray-600 mt-1">
                   <span className="flex items-center gap-1"><Mail className="w-3.5 h-3.5" />{res.email}</span>
                   {res.phone && <span>📞 {res.phone}</span>}
-                  <span className="font-semibold">{res.portions} ración{res.portions > 1 ? 'es' : ''}</span>
+                  <span className="font-semibold">{res.portions} comensal{res.portions > 1 ? 'es' : ''}</span>
                 </div>
                 <p className="text-xs text-gray-500 mt-1 italic truncate max-w-md">{res.menu_description}</p>
               </div>

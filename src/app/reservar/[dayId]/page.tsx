@@ -4,7 +4,7 @@ import { es } from 'date-fns/locale';
 import Link from 'next/link';
 import { ArrowLeft, ChefHat } from 'lucide-react';
 import { redirect } from 'next/navigation';
-import { ALLERGENS } from '@/lib/constants';
+import AllergyNotice from '@/app/components/AllergyNotice';
 import { sendConfirmationEmail } from '@/lib/email';
 
 async function getDayAndAvailability(dayId: string) {
@@ -53,7 +53,7 @@ export default async function ReservationFormPage({ params, searchParams }: { pa
     return (
       <div className="min-h-screen bg-gray-50 py-12 flex flex-col items-center">
         <h2 className="text-2xl font-bold text-gray-800">Aforo completado</h2>
-        <p className="text-gray-500 mt-2">Lo sentimos, no quedan comidas disponibles para este día.</p>
+        <p className="text-gray-500 mt-2">Lo sentimos, no quedan plazas disponibles para este servicio.</p>
         <Link href="/" className="text-sky-500 hover:underline mt-6 bg-sky-50 px-6 py-2 rounded-full">Volver al calendario</Link>
       </div>
     );
@@ -66,12 +66,10 @@ export default async function ReservationFormPage({ params, searchParams }: { pa
     const phone = formData.get('phone') as string;
     const portions = parseInt(formData.get('portions') as string);
     const dayId = formData.get('menu_day_id') as string;
-    const allergens = formData.getAll('allergens') as string[];
-    const allergens_notes = formData.get('allergens_notes') as string | null;
 
     const currentData = await getDayAndAvailability(dayId);
     if (!currentData || currentData.availablePortions < portions) {
-      redirect(`/reservar/${dayId}?error=No+hay+suficientes+comidas+disponibles`);
+      redirect(`/reservar/${dayId}?error=No+hay+suficientes+comensales+disponibles`);
     }
 
     if (name && email && phone && portions) {
@@ -84,8 +82,8 @@ export default async function ReservationFormPage({ params, searchParams }: { pa
       const status = verified ? 'pending_confirmation' as const : 'pending_approval' as const;
 
       const result = await sql`
-        INSERT INTO reservations (menu_day_id, name, email, phone, portions, allergens, allergens_notes, status)
-        VALUES (${dayId}, ${name}, ${email}, ${phone}, ${portions}, ${allergens}, ${allergens_notes}, ${status})
+        INSERT INTO reservations (menu_day_id, name, email, phone, portions, status)
+        VALUES (${dayId}, ${name}, ${email}, ${phone}, ${portions}, ${status})
         RETURNING id, confirmation_token, status
       ` as { id: string; confirmation_token: string; status: string }[];
       
@@ -114,13 +112,13 @@ export default async function ReservationFormPage({ params, searchParams }: { pa
       <div className="max-w-2xl mx-auto">
         <Link href="/" className="inline-flex items-center gap-2 text-sky-500 hover:text-sky-800 mb-8 font-medium">
           <ArrowLeft className="w-4 h-4" />
-          Volver a comidas
+          Volver a servicios
         </Link>
         
         <div className="bg-white rounded-[2rem] shadow-xl border border-gray-100 overflow-hidden transform transition-all">
           <div className="bg-gradient-to-r from-sky-500 to-blue-600 p-8 text-white relative flex justify-between items-start md:items-center">
             <div className="relative z-10">
-              <h1 className="text-3xl font-extrabold mb-2 drop-shadow-md">Reserva de Comida</h1>
+              <h1 className="text-3xl font-extrabold mb-2 drop-shadow-md">Reserva de mesa</h1>
               <p className="text-sky-100 text-xl capitalize font-medium">{format(new Date(day.date), "eeee, d 'de' MMMM 'de' yyyy", { locale: es })}</p>
             </div>
             <img src="/Logo_CIFP.png" alt="CIFP Felipe VI" className="h-16 w-auto bg-white/95 backdrop-blur-sm p-2 rounded-xl shadow-md hidden sm:block relative z-10" />
@@ -136,28 +134,13 @@ export default async function ReservationFormPage({ params, searchParams }: { pa
             <div className="mb-10 p-5 bg-gradient-to-br from-sky-50 to-blue-50 text-sky-950 rounded-2xl border border-sky-100 shadow-sm flex gap-4 items-start">
               <ChefHat className="w-6 h-6 mt-0.5 flex-shrink-0 text-sky-500 drop-shadow-sm" />
               <div className="w-full">
-                <strong className="block mb-2 font-bold text-sky-900 text-lg">Comida del día</strong>
+                <strong className="block mb-2 font-bold text-sky-900 text-lg">Servicio del día</strong>
                 <p className="text-gray-700 leading-relaxed">{day.description}</p>
-                
-                {day.allergens && day.allergens.length > 0 && (
-                  <div className="mt-4 flex flex-wrap gap-1.5">
-                    <span className="text-xs font-semibold text-gray-500 self-center mr-1">Alérgenos:</span>
-                    {day.allergens.map(aId => {
-                      const a = ALLERGENS.find(al => al.id === aId);
-                      if (!a) return null;
-                      return (
-                        <span key={a.id} className={`text-[11px] px-2 py-0.5 rounded border ${a.color} font-bold uppercase tracking-wider`}>
-                          {a.label}
-                        </span>
-                      );
-                    })}
-                  </div>
-                )}
 
                 <div className="mt-4 pt-4 border-t border-sky-200/50 flex items-center justify-between">
                   <div className="text-sm font-semibold text-sky-700 bg-white/60 backdrop-blur-sm inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-sky-200">
                     <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                    Quedan {availablePortions} comidas
+                    Quedan {availablePortions} comensales
                   </div>
                 </div>
               </div>
@@ -201,35 +184,8 @@ export default async function ReservationFormPage({ params, searchParams }: { pa
                 </div>
               </div>
 
-              <div className="border-t border-gray-100 pt-6">
-                <label className="block text-sm font-semibold text-gray-700 mb-3">¿Tienes alguna alergia o intolerancia?</label>
-                <p className="text-xs text-gray-500 mb-4">Marca los alérgenos que te afectan para que cocina pueda adaptar tu ración si es posible.</p>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-4">
-                  {ALLERGENS.map(allergen => (
-                    <label key={allergen.id} className="flex items-center gap-2 cursor-pointer group">
-                      <input 
-                        type="checkbox" 
-                        name="allergens" 
-                        value={allergen.id}
-                        className="w-4 h-4 text-sky-600 rounded border-gray-300 focus:ring-sky-500 cursor-pointer"
-                      />
-                      <span className="text-sm text-gray-700 group-hover:text-gray-900">{allergen.label}</span>
-                    </label>
-                  ))}
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-gray-600 mb-2">Otros detalles o notas (opcional)</label>
-                  <input 
-                    type="text" 
-                    name="allergens_notes" 
-                    placeholder="Ej: Soy celíaco severo, Sin sal, etc."
-                    className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all placeholder-gray-400 text-sm text-gray-900"
-                  />
-                </div>
-              </div>
-
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Número de Comidas</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Número de comensales</label>
                 <select 
                   name="portions" 
                   required
@@ -239,8 +195,10 @@ export default async function ReservationFormPage({ params, searchParams }: { pa
                     <option key={i + 1} value={i + 1}>{i + 1}</option>
                   ))}
                 </select>
-                <p className="mt-2 text-sm text-gray-500">Máximo 10 comidas por reserva.</p>
+                <p className="mt-2 text-sm text-gray-500">Máximo 10 comensales por reserva.</p>
               </div>
+
+              <AllergyNotice />
 
               <div className="pt-6 border-t border-gray-100">
                 <button 

@@ -1,8 +1,7 @@
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-
-const ADMIN_SECRET = process.env.ADMIN_SECRET || 'change_me_in_production';
+import { SESSION_COOKIE, deleteSession, getSessionUser } from '@/lib/auth';
 
 export default async function AdminLayout({
   children,
@@ -10,11 +9,23 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   const cookieStore = await cookies();
-  const token = cookieStore.get('admin_token');
-  const isAuthenticated = token?.value === ADMIN_SECRET;
+  const user = await getSessionUser(cookieStore.get(SESSION_COOKIE)?.value);
 
-  if (!isAuthenticated) {
+  if (!user) {
+    // Solo /admin/login llega aquí sin sesión (el proxy redirige el resto).
     return <>{children}</>;
+  }
+
+  async function logout() {
+    'use server';
+    const store = await cookies();
+    try {
+      await deleteSession(store.get(SESSION_COOKIE)?.value);
+    } catch (error) {
+      console.error('Error cerrando sesión:', error);
+    }
+    store.delete(SESSION_COOKIE);
+    redirect('/admin/login');
   }
 
   return (
@@ -29,15 +40,16 @@ export default async function AdminLayout({
               </Link>
             </div>
             <div className="flex items-center gap-4">
+              <span className="hidden sm:inline text-sky-100 text-sm">
+                Conectado como <strong className="text-white">{user.username}</strong>
+              </span>
+              <Link href="/admin/usuarios" className="text-sky-100 hover:text-white transition-colors text-sm">
+                Usuarios
+              </Link>
               <Link href="/" className="text-sky-100 hover:text-white transition-colors text-sm">
                 Ver Web
               </Link>
-              <form action={async () => {
-                'use server';
-                const cookieStore = await cookies();
-                cookieStore.delete('admin_token');
-                redirect('/admin/login');
-              }}>
+              <form action={logout}>
                 <button type="submit" className="bg-sky-600 hover:bg-sky-900 px-4 py-2 rounded-lg text-sm transition-colors">
                   Cerrar sesión
                 </button>

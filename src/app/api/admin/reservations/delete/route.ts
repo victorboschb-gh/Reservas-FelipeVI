@@ -1,7 +1,11 @@
+import { getCurrentAdmin } from '@/lib/auth';
 import { NextResponse } from 'next/server';
 import { sql, Reservation } from '@/lib/db';
 
 export async function POST(request: Request) {
+  if (!(await getCurrentAdmin())) {
+    return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
+  }
   try {
     const { reservationId } = await request.json();
     if (!reservationId) {
