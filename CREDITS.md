@@ -22,5 +22,5 @@ Atribución recomendada:
 
 ## Documentación
 
-- **Guía práctica de automatizaciones para la gestión educativa** (v2.2, créditos actualizados): [docs/Guia_Practica_Automatizaciones_CIFP_v2.2.pdf](./docs/Guia_Practica_Automatizaciones_CIFP_v2.2.pdf)
+- **Guía práctica de automatizaciones para la gestión educativa** (v2.3, octubre de 2026): [docs/Guia_Practica_Automatizaciones_CIFP_v2.3.pdf](./docs/Guia_Practica_Automatizaciones_CIFP_v2.3.pdf) · editable: [docs/Guia_Practica_Automatizaciones_CIFP_v2.3.docx](./docs/Guia_Practica_Automatizaciones_CIFP_v2.3.docx)
 - **Aplicación en producción**: [Reservas de comedor — web del CIFP Felipe VI](https://cifpfelipevi.centros.educa.jcyl.es/sitio/index.cgi?wid_seccion=53&wid_item=196)

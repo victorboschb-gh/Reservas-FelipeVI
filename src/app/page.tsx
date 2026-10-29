@@ -84,7 +84,7 @@ export default async function UserLandingPage() {
             <div className="flex-1">
               <h2 className="text-xl font-bold text-gray-900">¿Cómo funciona?</h2>
               <p className="text-sm text-gray-500">Guía rápida para reservar tu mesa</p>
-              <a href="/Guia_Practica_Automatizaciones_CIFP_v2 (1).pdf" download className="inline-flex items-center gap-2 mt-2 px-4 py-2 bg-sky-600 text-white text-sm font-medium rounded-lg hover:bg-sky-700 transition-colors">
+              <a href="/Guia_Practica_Automatizaciones_CIFP_v2.3.pdf" download className="inline-flex items-center gap-2 mt-2 px-4 py-2 bg-sky-600 text-white text-sm font-medium rounded-lg hover:bg-sky-700 transition-colors">
                 <Download className="w-4 h-4" />
                 Descargar guía de la automatización
               </a>
